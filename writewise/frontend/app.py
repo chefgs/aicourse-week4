@@ -12,8 +12,19 @@ st.set_page_config(page_title="WriteWise – Smarter Document Rewriter", page_ic
 st.title("WriteWise – Smarter Document Rewriter")
 st.write("Transform your text with AI-powered tone adjustments.")
 
-if st.button("Use Sample Text"):
-    st.session_state['input_text'] = "We'd like to inform you that your payment is past due. Please make a payment as soon as possible to avoid additional fees. If you have any questions, contact our support team."
+
+# Sample text options
+sample_texts = {
+    "Payment Request": "We'd like to inform you that your payment is past due. Please make a payment as soon as possible to avoid additional fees. If you have any questions, contact our support team.",
+    "Story": "Once upon a time, a little girl found a mysterious key in her backyard. She wondered what it could unlock.",
+    "Job Happy News": "Congratulations! We are pleased to offer you the position. Welcome to the team!",
+    "Sad News": "We regret to inform you that your application was not successful this time.",
+    "Business News": "Our company has achieved record growth this quarter, thanks to the dedication of our employees and support from our clients."
+}
+
+sample_choice = st.selectbox("Choose a sample text to load:", ["None"] + list(sample_texts.keys()))
+if sample_choice != "None":
+    st.session_state['input_text'] = sample_texts[sample_choice]
 
 text = st.text_area("Enter your text below:", value=st.session_state.get('input_text', ''), height=200, key="input_text")
 tone_options = [
@@ -26,7 +37,17 @@ tone_options = [
     "Social media summary"
 ]
 tone = st.radio("Select the tone for rewriting:", tone_options, horizontal=True)
+
 as_story = st.checkbox("Rewrite as a story (if possible)")
+
+# Response level selection
+level_options = {
+    "Brief summary": "brief",
+    "Elaborate": "elaborate",
+    "Comprehensive": "comprehensive"
+}
+level_label = st.radio("Select response detail level:", list(level_options.keys()), horizontal=True)
+response_level = level_options[level_label]
 
 if st.button("Rewrite Text"):
     if not text.strip():
@@ -34,7 +55,12 @@ if st.button("Rewrite Text"):
     else:
         with st.spinner("Rewriting your text..."):
             try:
-                payload = {"text": text, "tone": tone, "as_story": as_story}
+                payload = {
+                    "text": text,
+                    "tone": tone,
+                    "as_story": as_story,
+                    "response_level": response_level
+                }
                 resp = requests.post(f"{API_URL}/rewrite", json=payload, timeout=60)
                 resp.raise_for_status()
                 data = resp.json()

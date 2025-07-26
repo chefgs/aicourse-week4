@@ -19,10 +19,12 @@ app.add_middleware(
 )
 
 
+
 class RewriteRequest(BaseModel):
     text: str
     tone: str
     as_story: bool = False
+    response_level: str = "elaborate"  # "brief", "elaborate", "comprehensive"
 
 class RewriteResponse(BaseModel):
     rewritten_text: str
@@ -52,12 +54,20 @@ async def rewrite_text(request: RewriteRequest):
     except Exception:
         input_type = "unknown"
 
-    # 2. Build rewrite prompt
+
+    # 2. Build rewrite prompt with response level
     rewrite_instructions = f"Rewrite the following text in a {request.tone} tone."
     if request.tone == "Social media summary":
         rewrite_instructions = "Summarize the following text for social media in a catchy, engaging way."
     if request.as_story or (input_type == "story"):
         rewrite_instructions += " Present it as a story."
+    # Add response level instructions
+    if request.response_level == "brief":
+        rewrite_instructions += " Keep the response brief and concise."
+    elif request.response_level == "elaborate":
+        rewrite_instructions += " Provide an elaborate and detailed rewrite."
+    elif request.response_level == "comprehensive":
+        rewrite_instructions += " Make the rewrite comprehensive, covering all important aspects in depth."
     rewrite_prompt = f"{rewrite_instructions}\nText: {request.text}"
 
     # 3. Rewrite text
