@@ -66,13 +66,18 @@ WriteWise is an AI-powered document rewriting tool that allows users to input an
     2. Rewrite text in selected tone (and as story if requested)
     3. Generate a title for the rewritten content
 
+
 ### Frontend (Streamlit)
 - **Features:**
     - Text input area (multi-line)
     - Tone selection (radio buttons)
     - "Rewrite as story" checkbox
+    - Response detail level (brief, elaborate, comprehensive)
+    - Use Sample Text dropdown (multiple categories)
+    - Social Media Platform selection (Instagram, Facebook, LinkedIn, Twitter/X, WhatsApp)
+    - Platform-optimized text transformation and display
+    - Direct posting links for each platform (where supported)
     - Submit button
-    - Use Sample Text button
     - Display detected input type, generated title, and rewritten text
     - Copy output button
     - Loading spinner during API call
