@@ -39,7 +39,7 @@ async def rewrite_text(request: RewriteRequest):
     if not request.text:
         raise HTTPException(status_code=400, detail="Text cannot be empty")
     allowed_tones = [
-        "Professional", "Friendly", "Casual", "Corporate", "Kids tone", "Gen Z tone", "Social media summary"
+        "Professional", "Friendly", "Casual", "Corporate", "Kids tone", "Gen Z tone", "Social media summary", "Technical", "Persuasive", "Empathetic"
     ]
     if request.tone not in allowed_tones:
         raise HTTPException(status_code=400, detail=f"Invalid tone. Allowed: {', '.join(allowed_tones)}")
